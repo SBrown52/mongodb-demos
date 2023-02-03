@@ -1,0 +1,77 @@
+{
+    "customerId": "$fbid",
+    "name": "$name",
+    "startAge": "$age",
+    "customerStartDate": {"$date": {"min": "2020-05-01", "max": "2022-05-30"}},
+    "nationalInsuranceNo": {"$ssn": { "dashes": false }},
+    "status": {"$choose": {"from": ["active", "dormant", "deleted"], "weights": [28, 1, 1]}},
+    "address": {
+        "street": "$address",
+        "city": "$city",
+        "postcode": "$postal",
+        "country": "$country"
+    },
+    "contact": {
+        "email": "$email",
+        "phone": "$phone"
+    },
+    "job": {
+        "jobTitle": "$profession",
+        "company": "$company",
+        "yearsEmployed": {"$choose": {"from": [1, 2, 3, 4, 5,6,7,8]}}
+    },
+    "products": {"$pickset": {"array": [
+        {
+            "type": "CurrentAccount",
+            "accountNumber": {"$numberLong": { "min": 100000, "max": 999999}},
+            "sortCode": {"$join": {"array": ["40-",{"$integer": {"min": 10, "max": 90}}, "-", {"$integer": {"min": 10, "max": 90}}]}},
+            "cards": {
+                "type": "Visa",
+                "cardNumber": "$cc",
+                "expiry": "$exp"
+            }
+        },
+        {
+            "type": "SavingsAccount",
+            "accountNumber": {"$numberLong": { "min": 100000, "max": 999999}},
+            "sortCode": {"$join": {"array": ["40-",{"$integer": {"min": 10, "max": 90}}, "-", {"$integer": {"min": 10, "max": 90}}]}},
+            "productName": {"$choose": {"from": ["FixedRate-1yr", "FixedRate-2yr", "EasyAccess", "RegularSaver"]}}
+        },
+        {
+            "type": "CreditCard",
+            "issuer": {"$choose": {"from": ["Visa", "AmericanExpress"], "weights": [7, 1]}},
+            "cardNumber": "$cc",
+            "expiry": "$exp"
+    },
+    {
+        "type": "Mortgage",
+        "sameAddressAsAccount": "yes",
+        "mortgageId": {"$numberLong": { "min": 100000, "max": 999999}},
+        "initialLength": {"$choose": {"from": [15, 20, 25], "weights": [1, 1, 1]}},
+        "principalAmount": {"$choose": {"from": [150000, 200000, 250000, 300000, 350000, 450000], "weights": [1, 1, 1,1,1,1]}},
+        "productName": {"$choose": {"from": ["FixedRate-2yr", "FixedRate-5yr", "Tracker"], "weights": [1, 1, 1]}}
+    },
+    {
+        "type": "Mortgage",
+        "sameAddressAsAccount": "no",
+        "propertyAddress": {
+            "street": "$address",
+            "city": "$city",
+            "postcode": "$postal",
+            "country": "$country"
+        },
+        "mortgageId": {"$numberLong": { "min": 100000, "max": 999999}},
+        "initialLength": {"$choose": {"from": [15, 20, 25], "weights": [1, 1, 1]}},
+        "principalAmount": {"$choose": {"from": [150000, 200000, 250000, 300000, 350000, 450000], "weights": [1, 1, 1,1,1,1]}},
+        "productName": {"$choose": {"from": ["FixedRate-2yr", "FixedRate-5yr", "Tracker"], "weights": [1, 1, 1]}}
+    },
+    {
+        "type": "Loan",
+        "loanId": {"$numberLong": { "min": 100000, "max": 999999}},
+        "initialLength": {"$choose": {"from": [2, 3, 5], "weights": [1, 1, 1]}},
+        "principalAmount": {"$choose": {"from": [1500, 2000, 2500, 3000, 3500, 4500], "weights": [1, 1, 1,1,1,1]}},
+        "productName": {"$choose": {"from": ["FixedRate-2%", "FixedRate-3%", "Tracker"], "weights": [1, 1, 1]}}
+    }
+    ],
+    "quantity": {"$integer": {"min": 1, "max": 4}}}}
+}
